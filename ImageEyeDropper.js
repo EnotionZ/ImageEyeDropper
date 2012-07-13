@@ -2,13 +2,14 @@
 (function() {
   var ImageEyeDropper;
 
-  ImageEyeDropper = function(img, opts) {
-    this.fnStack = {};
-    return this.init(img, opts);
-  };
+  ImageEyeDropper = (function() {
 
-  ImageEyeDropper.prototype = {
-    init: function(img, opts) {
+    function ImageEyeDropper(img, opts) {
+      this.fnStack = {};
+      this.init(img, opts);
+    }
+
+    ImageEyeDropper.prototype.init = function(img, opts) {
       var imgObj,
         _this = this;
       if (typeof img === 'string') {
@@ -22,8 +23,9 @@
         return _this._imageLoaded();
       });
       return this;
-    },
-    _imageLoaded: function() {
+    };
+
+    ImageEyeDropper.prototype._imageLoaded = function() {
       var h, w,
         _this = this;
       this.canvas = document.createElement('canvas');
@@ -38,13 +40,16 @@
       return this.img.addEventListener('mousemove', function(e) {
         return _this.imgMousemove(e);
       });
-    },
-    colorFromPoint: function(point) {
+    };
+
+    ImageEyeDropper.prototype.colorFromPoint = function(point) {
       var i, pixelIndex;
       i = pixelIndex = (point.y * this.width + point.x) * 4;
-      return this.color = this._RgbToHex([this.data[i], this.data[i + 1], this.data[i + 2]]);
-    },
-    _RgbToHex: function(rgb) {
+      this.rgb = [this.data[i], this.data[i + 1], this.data[i + 2]];
+      return this.hex = this._RgbToHex(this.rgb);
+    };
+
+    ImageEyeDropper.prototype._RgbToHex = function(rgb) {
       var hex, i, pushToHex, val, _i, _len;
       hex = [];
       pushToHex = function(val, i) {
@@ -57,14 +62,17 @@
         pushToHex(val, i);
       }
       return '#' + hex.join('');
-    },
-    imgClick: function(e) {
-      return this.trigger('click', this.color);
-    },
-    imgMousemove: function(e) {
-      return this.trigger('mousemove', this.colorFromPoint(this.cursor = this._getCursor(e)));
-    },
-    _getCursor: function(e) {
+    };
+
+    ImageEyeDropper.prototype.imgClick = function(e) {
+      return this.trigger('click', this.hex, this.rgb);
+    };
+
+    ImageEyeDropper.prototype.imgMousemove = function(e) {
+      return this.trigger('mousemove', this.colorFromPoint(this.cursor = this._getCursor(e)), this.rgb);
+    };
+
+    ImageEyeDropper.prototype._getCursor = function(e) {
       var _ref;
       if ((_ref = this._offset) == null) {
         this._offset = this._getOffset();
@@ -73,8 +81,9 @@
         x: e.clientX - this._offset.x,
         y: e.clientY - this._offset.y
       };
-    },
-    _getOffset: function() {
+    };
+
+    ImageEyeDropper.prototype._getOffset = function() {
       var obj, x, y;
       x = y = 0;
       obj = this.img;
@@ -87,8 +96,9 @@
         x: x,
         y: y
       };
-    },
-    trigger: function(type) {
+    };
+
+    ImageEyeDropper.prototype.trigger = function(type) {
       var args, fns, func, _i, _len, _results;
       fns = this.fnStack[type];
       args = Array.prototype.slice.call(arguments, 1);
@@ -100,13 +110,14 @@
         }
         return _results;
       }
-    },
-    on: function(type, fn) {
+    };
+
+    ImageEyeDropper.prototype.on = function(type, fn) {
       var _ref;
-      this.fnStack[type] = (_ref = this.fnStack[type]) != null ? _ref : [];
-      return this.fnStack[type].push(fn);
-    },
-    off: function(type, fn) {
+      return (this.fnStack[type] = (_ref = this.fnStack[type]) != null ? _ref : []).push(fn);
+    };
+
+    ImageEyeDropper.prototype.off = function(type, fn) {
       var fns, func, i, _i, _len, _results;
       fns = this.fnStack[type];
       if (typeof fn === "function" ? fn() : void 0) {
@@ -119,8 +130,11 @@
       } else {
         return delete this.fnStack[type];
       }
-    }
-  };
+    };
+
+    return ImageEyeDropper;
+
+  })();
 
   window.ImageEyeDropper = ImageEyeDropper;
 

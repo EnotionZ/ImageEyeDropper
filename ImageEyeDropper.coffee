@@ -1,7 +1,7 @@
-ImageEyeDropper = (img, opts)->
-	@fnStack = {}; @init(img, opts)
+class ImageEyeDropper
+	constructor: (img, opts)->
+		@fnStack = {}; @init(img, opts)
 
-ImageEyeDropper.prototype = {
 	init: (img, opts)->
 		if(typeof img is 'string')
 			imgObj = document.getElementById img
@@ -24,7 +24,8 @@ ImageEyeDropper.prototype = {
 
 	colorFromPoint: (point)->
 		i = pixelIndex = (point.y*@width + point.x)*4
-		@color = @_RgbToHex [@data[i], @data[i+1], @data[i+2]]
+		@rgb = [@data[i], @data[i+1], @data[i+2]]
+		@hex = @_RgbToHex @rgb
 
 	_RgbToHex: (rgb)->
 		hex = []
@@ -35,10 +36,10 @@ ImageEyeDropper.prototype = {
 		'#' + hex.join ''
 
 	imgClick: (e)->
-		@trigger('click', @color)
+		@trigger 'click', @hex, @rgb
 
 	imgMousemove: (e)->
-		@trigger 'mousemove', @colorFromPoint(@cursor=@_getCursor e)
+		@trigger 'mousemove', @colorFromPoint(@cursor=@_getCursor e), @rgb
 
 	_getCursor: (e)->
 		@_offset ?= @_getOffset()
@@ -56,13 +57,11 @@ ImageEyeDropper.prototype = {
 		(func.apply @, args for func in fns) if fns?
 
 	on: (type, fn)->
-		@fnStack[type] = @fnStack[type] ? []
-		@fnStack[type].push fn
+		(@fnStack[type] = @fnStack[type] ? []).push fn
 
 	off: (type, fn)->
 		fns = @fnStack[type]
 		if fn?() then (fns.splice i,1 if func is fn) for func, i in fns
 		else delete @fnStack[type]
-}
 
 window.ImageEyeDropper = ImageEyeDropper

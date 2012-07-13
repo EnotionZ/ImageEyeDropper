@@ -16,12 +16,13 @@
 	  </div>
 
 <script type="text/javascript">
-var idrop = new ImageEyeDropper("sample");
+var idrop = new ImageEyeDropper('sample');
 
-idrop.on("click", function(hex) {
-	document.body.style.backgroundColor = hex;
+idrop.on('click', function(hex, rgb) {
+	rgb.push(.5);
+	document.body.style.backgroundColor = 'rgba('+rgb.join(',')+')';
 });
-idrop.on("mousemove", function(hex) {
+idrop.on('mousemove', function(hex, rgb) {
 	container.style.backgroundColor = hex;
 });
 
