@@ -13,16 +13,13 @@
       var imgObj,
         _this = this;
       if (typeof img === 'string') {
-        imgObj = document.getElementById(img);
-        if (imgObj && imgObj.tagName === 'IMG') {
+        if ((imgObj = document.getElementById(img)) && imgObj.tagName === 'IMG') {
           img = imgObj;
         }
       }
-      this.img = img;
-      this.img.addEventListener('load', function() {
+      return (this.img = img).addEventListener('load', function() {
         return _this._imageLoaded();
       });
-      return this;
     };
 
     ImageEyeDropper.prototype._imageLoaded = function() {
@@ -45,8 +42,7 @@
     ImageEyeDropper.prototype.colorFromPoint = function(point) {
       var i, pixelIndex;
       i = pixelIndex = (point.y * this.width + point.x) * 4;
-      this.rgb = [this.data[i], this.data[i + 1], this.data[i + 2]];
-      return this.hex = this._RgbToHex(this.rgb);
+      return this.hex = this._RgbToHex(this.rgb = [this.data[i], this.data[i + 1], this.data[i + 2]]);
     };
 
     ImageEyeDropper.prototype._RgbToHex = function(rgb) {

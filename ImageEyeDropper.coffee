@@ -4,13 +4,9 @@ class ImageEyeDropper
 
 	init: (img, opts)->
 		if(typeof img is 'string')
-			imgObj = document.getElementById img
-			if imgObj and imgObj.tagName is 'IMG' then img = imgObj
-		@img = img
+			if (imgObj = document.getElementById(img)) and imgObj.tagName is 'IMG' then img = imgObj
+		(@img = img).addEventListener 'load', ()=> @_imageLoaded()
 
-		@img.addEventListener 'load', ()=> @_imageLoaded()
-		@
-	
 	_imageLoaded: ()->
 		@canvas = document.createElement 'canvas'
 		@canvas.width = @width = w = @img.width
@@ -24,8 +20,7 @@ class ImageEyeDropper
 
 	colorFromPoint: (point)->
 		i = pixelIndex = (point.y*@width + point.x)*4
-		@rgb = [@data[i], @data[i+1], @data[i+2]]
-		@hex = @_RgbToHex @rgb
+		@hex = @_RgbToHex @rgb = [@data[i], @data[i+1], @data[i+2]]
 
 	_RgbToHex: (rgb)->
 		hex = []
@@ -35,11 +30,8 @@ class ImageEyeDropper
 		pushToHex val, i for val, i in rgb
 		'#' + hex.join ''
 
-	imgClick: (e)->
-		@trigger 'click', @hex, @rgb
-
-	imgMousemove: (e)->
-		@trigger 'mousemove', @colorFromPoint(@cursor=@_getCursor e), @rgb
+	imgClick: (e)-> @trigger 'click', @hex, @rgb
+	imgMousemove: (e)-> @trigger 'mousemove', @colorFromPoint(@cursor=@_getCursor e), @rgb
 
 	_getCursor: (e)->
 		@_offset ?= @_getOffset()
@@ -55,10 +47,7 @@ class ImageEyeDropper
 	trigger: (type)->
 		fns = @fnStack[type]; args = Array.prototype.slice.call arguments,1
 		(func.apply @, args for func in fns) if fns?
-
-	on: (type, fn)->
-		(@fnStack[type] = @fnStack[type] ? []).push fn
-
+	on: (type, fn)-> (@fnStack[type] = @fnStack[type] ? []).push fn
 	off: (type, fn)->
 		fns = @fnStack[type]
 		if fn?() then (fns.splice i,1 if func is fn) for func, i in fns
