@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Eye Dropper</title>
+		<script src="ImageEyeDropper.js"></script>
+		<style type="text/css">
+			html, body, div { margin: 0; }
+			#sample { border: 50px solid; cursor: crosshair; }
+			#container { margin: 100px;position: relative; }
+		</style>
+  </head>
+  <body>
+	  <div id="container">
+		  <img src="sample.jpg" id="sample">
+	  </div>
+
+<script type="text/javascript">
+var idrop = new ImageEyeDropper("sample");
+
+idrop.on("click", function(hex) {
+	document.body.style.backgroundColor = hex;
+});
+idrop.on("mousemove", function(hex) {
+	sample.style.borderColor = hex;
+});
+
+</script>
+
+  </body>
+</html>
+
