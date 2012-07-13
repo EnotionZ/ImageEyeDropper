@@ -5,8 +5,8 @@
 		<script src="ImageEyeDropper.js"></script>
 		<style type="text/css">
 			html, body, div { margin: 0; }
-			#sample { border: 50px solid; cursor: crosshair; }
-			#container { margin: 100px;position: relative; }
+			#sample { cursor: crosshair; margin: 50px; }
+			#container { margin: 100px; position: relative; float: left; }
 		</style>
   </head>
   <body>
@@ -21,7 +21,7 @@ idrop.on("click", function(hex) {
 	document.body.style.backgroundColor = hex;
 });
 idrop.on("mousemove", function(hex) {
-	sample.style.borderColor = hex;
+	container.style.backgroundColor = hex;
 });
 
 </script>
