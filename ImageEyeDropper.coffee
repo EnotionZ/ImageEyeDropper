@@ -3,30 +3,24 @@ ImageEyeDropper = (img, opts)->
 
 ImageEyeDropper.prototype = {
 	init: (img, opts)->
-		self = @
-
 		if(typeof img is 'string')
 			imgObj = document.getElementById img
 			if imgObj and imgObj.tagName is 'IMG' then img = imgObj
 		@img = img
 
-		@img.addEventListener 'load', ()-> self._imageLoaded()
+		@img.addEventListener 'load', ()=> @_imageLoaded()
 		@
 	
 	_imageLoaded: ()->
-		@src = @img.getAttribute 'src'
-		@width = w = @img.width
-		@height = h = @img.height
 		@canvas = document.createElement 'canvas'
-		@canvas.width = w
-		@canvas.height = h
+		@canvas.width = @width = w = @img.width
+		@canvas.height = @height = h = @img.height
 		@ctx = @canvas.getContext '2d'
 		@ctx.drawImage @img, 0, 0, w, h
 		@data = @ctx.getImageData(0, 0, w, h).data
 
-		self = @
-		@img.addEventListener 'click', (e)-> self.imgClick(e)
-		@img.addEventListener 'mousemove', (e)-> self.imgMousemove(e)
+		@img.addEventListener 'click', (e)=> @imgClick(e)
+		@img.addEventListener 'mousemove', (e)=> @imgMousemove(e)
 
 	colorFromPoint: (point)->
 		i = pixelIndex = (point.y*@width + point.x)*4

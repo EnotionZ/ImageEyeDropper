@@ -9,8 +9,8 @@
 
   ImageEyeDropper.prototype = {
     init: function(img, opts) {
-      var imgObj, self;
-      self = this;
+      var imgObj,
+        _this = this;
       if (typeof img === 'string') {
         imgObj = document.getElementById(img);
         if (imgObj && imgObj.tagName === 'IMG') {
@@ -19,27 +19,24 @@
       }
       this.img = img;
       this.img.addEventListener('load', function() {
-        return self._imageLoaded();
+        return _this._imageLoaded();
       });
       return this;
     },
     _imageLoaded: function() {
-      var h, self, w;
-      this.src = this.img.getAttribute('src');
-      this.width = w = this.img.width;
-      this.height = h = this.img.height;
+      var h, w,
+        _this = this;
       this.canvas = document.createElement('canvas');
-      this.canvas.width = w;
-      this.canvas.height = h;
+      this.canvas.width = this.width = w = this.img.width;
+      this.canvas.height = this.height = h = this.img.height;
       this.ctx = this.canvas.getContext('2d');
       this.ctx.drawImage(this.img, 0, 0, w, h);
       this.data = this.ctx.getImageData(0, 0, w, h).data;
-      self = this;
       this.img.addEventListener('click', function(e) {
-        return self.imgClick(e);
+        return _this.imgClick(e);
       });
       return this.img.addEventListener('mousemove', function(e) {
-        return self.imgMousemove(e);
+        return _this.imgMousemove(e);
       });
     },
     colorFromPoint: function(point) {
