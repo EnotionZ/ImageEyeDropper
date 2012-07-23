@@ -1,13 +1,12 @@
 class ImageEyeDropper
 	constructor: (img, opts={})->
 		@fnStack = {}
-		@ready = opts.ready
 		@init(img, opts)
-		@_loaded = false
 
 	init: (img, opts)->
 		if(typeof img is 'string')
 			if (imgObj = document.getElementById(img)) and imgObj.tagName is 'IMG' then img = imgObj
+		@_loaded = false
 		(@img = img).addEventListener 'load', ()=> @_imageLoaded()
 
 	isReady: ()-> @_loaded
@@ -26,15 +25,7 @@ class ImageEyeDropper
 
 	colorFromPoint: (point)->
 		i = pixelIndex = (point.y*@width + point.x)*4
-		@hex = @_RgbToHex @rgb = [@data[i], @data[i+1], @data[i+2]]
-
-	_RgbToHex: (rgb)->
-		hex = []
-		pushToHex = (val, i)->
-			bit = (val - 0).toString(16)
-			hex.push(_hex = if bit.length is 1 then ('0' + bit) else bit)
-		pushToHex val, i for val, i in rgb
-		'#' + hex.join ''
+		@hex = ImageEyeDropper.rgbToHex @rgb = [@data[i], @data[i+1], @data[i+2]]
 
 	imgClick: (e)-> @trigger 'click', @hex, @rgb
 	imgMousemove: (e)-> @trigger 'mousemove', @colorFromPoint(@cursor=@_getCursor e), @rgb
@@ -58,5 +49,13 @@ class ImageEyeDropper
 		fns = @fnStack[type]
 		if fn?() then (fns.splice i,1 if func is fn) for func, i in fns
 		else delete @fnStack[type]
+
+ImageEyeDropper.rgbToHex = (rgb)->
+	hex = []
+	pushToHex = (val, i)->
+		bit = (val - 0).toString(16)
+		hex.push(_hex = if bit.length is 1 then ('0' + bit) else bit)
+	pushToHex val, i for val, i in rgb
+	'#' + hex.join ''
 
 window.ImageEyeDropper = ImageEyeDropper
