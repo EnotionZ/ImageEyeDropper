@@ -1,11 +1,16 @@
 class ImageEyeDropper
-	constructor: (img, opts)->
-		@fnStack = {}; @init(img, opts)
+	constructor: (img, opts={})->
+		@fnStack = {}
+		@ready = opts.ready
+		@init(img, opts)
+		@_loaded = false
 
 	init: (img, opts)->
 		if(typeof img is 'string')
 			if (imgObj = document.getElementById(img)) and imgObj.tagName is 'IMG' then img = imgObj
 		(@img = img).addEventListener 'load', ()=> @_imageLoaded()
+
+	isReady: ()-> @_loaded
 
 	_imageLoaded: ()->
 		@canvas = document.createElement 'canvas'
@@ -17,6 +22,7 @@ class ImageEyeDropper
 
 		@img.addEventListener 'click', (e)=> @imgClick(e)
 		@img.addEventListener 'mousemove', (e)=> @imgMousemove(e)
+		@_loaded = true
 
 	colorFromPoint: (point)->
 		i = pixelIndex = (point.y*@width + point.x)*4
