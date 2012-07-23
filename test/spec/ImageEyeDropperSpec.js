@@ -3,7 +3,7 @@ describe("ImageEyeDropper", function() {
 
 	beforeEach(function() {
 		sampleImage = document.createElement('img');
-		sampleImage.setAttribute('src', '/test/src/sample.jpg');
+		sampleImage.setAttribute('src', '/test/src/rainbow.png');
 	});
 
 	it('should be able to obtain color given a point', function() {
@@ -13,15 +13,32 @@ describe("ImageEyeDropper", function() {
 		}, 'image never loaded', 10000);
 
 		runs(function() {
-			var expectedHex = '#d9d6cd';
-			var expectedRgb = [217, 214, 205];
-			imageEyeDropper.colorFromPoint({x: 0, y: 0});
-			expect(imageEyeDropper.rgb).toBeAccurateWithin(1, expectedRgb);
+			var expectedHex, expectedRgb;
+			var accuracy = 1;       // within 1% accuracy
 
-			expectedHex = '#2c2d25';
-			expectedRgb = [44, 45, 37];
-			imageEyeDropper.colorFromPoint({x: 162, y: 117});
-			expect(imageEyeDropper.rgb).toBeAccurateWithin(1, expectedRgb);
+			// top left pixel
+			expectedHex = '#ffd300';
+			expectedRgb = [255, 211, 0];
+			imageEyeDropper.colorFromPoint({x: 0, y: 0});
+			expect(imageEyeDropper.rgb).toBeAccurateWithin(accuracy, expectedRgb);
+
+			// top right pixel
+			expectedHex = '#ff00e1';
+			expectedRgb = [255, 0, 225];
+			imageEyeDropper.colorFromPoint({x: 499, y: 0});
+			expect(imageEyeDropper.rgb).toBeAccurateWithin(accuracy, expectedRgb);
+
+			// bottom left pixel
+			expectedHex = '#00ff33';
+			expectedRgb = [0, 255, 51];
+			imageEyeDropper.colorFromPoint({x: 0, y: 499});
+			expect(imageEyeDropper.rgb).toBeAccurateWithin(accuracy, expectedRgb);
+
+			// bottom right pixel
+			expectedHex = '#003bff';
+			expectedRgb = [0, 59, 255];
+			imageEyeDropper.colorFromPoint({x: 499, y: 499});
+			expect(imageEyeDropper.rgb).toBeAccurateWithin(accuracy, expectedRgb);
 		});
 	});
 
