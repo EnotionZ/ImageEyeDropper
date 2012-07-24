@@ -1,0 +1,3 @@
+[submodule "lib/colorjs"]
+	path = lib/colorjs
+	url = git://github.com/bebraw/colorjs.git
