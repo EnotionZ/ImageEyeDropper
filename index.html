@@ -11,16 +11,18 @@
 		#sample { cursor: crosshair; margin: 50px; }
 		#container { margin: 20px 0 0 20px; position: relative; float: left; }
 
-		#swatches { float: left; margin: 20px; }
-		#swatches div { margin: 0 0 20px; }
-		#swatches h4 { margin: 0 0 5px; }
-		#swatches ul { list-style-type: none; clear: both; margin: 0; padding: 0; }
-		#swatches li { margin: 0 10px; display: inline-block; width: 60px; height: 40px; line-height: 40px;  text-align: center; }
+		#swatches_container { float: left; margin: 20px; }
+		#swatches_container div { margin: 0 0 20px; }
+		#swatches_container h4 { margin: 0 0 5px; }
+		#swatches_container ul { list-style-type: none; clear: both; margin: 0; padding: 0; }
+		#swatches_container li { margin: 0 10px; display: inline-block; width: 60px; height: 40px; line-height: 40px;  text-align: center; }
 
 	</style>
 </head>
 <body>
-	<div id="swatches">
+	<div id="swatches_container">
+		<input id="range" type="range" min="0" max="360" step="1" value="40">
+		<div id="swatches"></div>
 	</div>
 
 	<div id="container">
@@ -40,21 +42,21 @@
 			swatches.innerHTML += html;
 		};
 
+		var range = document.getElementById('range');
+		var rangeFn = function() {
+			var angle = range.value;
+			var a = idrop.getSwatches('analogous', { angle: angle });
+			var s = idrop.getSwatches('split-complementary', { angle: angle });
+			var t = idrop.getSwatches('tetradic', { angle: angle });
+			swatches.innerHTML = '';
+			_showSwatches(a, 'Analogous at '+angle+' degrees');
+			_showSwatches(s, 'Split-complementary at '+angle+' degrees');
+			_showSwatches(t, 'tetradic at '+angle+' degrees');
+		};
+		range.addEventListener('change', rangeFn);
+
 		var idrop = new ImageEyeDropper('sample', {
-			ready: function() {
-				var a1 = this.getSwatches('analogous', { angle: 20 });
-				var a2 = this.getSwatches('analogous', { angle: 40 });
-				var sc1 = this.getSwatches('split-complementary', { angle: 30 });
-				var sc2 = this.getSwatches('split-complementary', { angle: 50 });
-				var t1 = this.getSwatches('tetradic', { angle: 60 });
-				var t2 = this.getSwatches('tetradic', { angle: 20 });
-				_showSwatches(a1, 'Analogous at 20 degrees');
-				_showSwatches(a2, 'Analogous at 40 degrees');
-				_showSwatches(sc1, 'Split-complementary at 30 degrees');
-				_showSwatches(sc2, 'Split-complementary at 30 degrees');
-				_showSwatches(t1, 'tetradic at 60 degrees');
-				_showSwatches(t2, 'tetradic at 20 degrees');
-			}
+			ready: function() { rangeFn(); }
 		});
 		var container = document.getElementById('container');
 

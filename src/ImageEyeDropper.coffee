@@ -84,18 +84,25 @@ class ImageEyeDropper
 		if !this.isReady() then return false
 
 		angle = (opts.angle || 30)/360
+
+		normalizeAngle = (a) ->
+			a = a - parseInt(a)
+			a = 1+a if a < 0
+			a = 1-a if a > 1
+			a
+
 		h = @color.toArray()[0]
 		if type is 'analogous'
 			a1 = @color.toHex()
-			a2 = @color.h(h-angle).toHex()
-			a3 = @color.h(h+angle).toHex()
+			a2 = @color.h(normalizeAngle(h-angle)).toHex()
+			a3 = @color.h(normalizeAngle(h+angle)).toHex()
 			@color.h h
 			return [a1, a2, a3]
 
 		else if type is 'split-complementary'
 			a1 = @color.toHex()
-			a2 = @color.h(h+0.5-angle/2).toHex()
-			a3 = @color.h(h+0.5+angle/2).toHex()
+			a2 = @color.h(normalizeAngle(h+0.5-angle/2)).toHex()
+			a3 = @color.h(normalizeAngle(h+0.5+angle/2)).toHex()
 			@color.h h
 			return [a1, a2, a3]
 
@@ -103,8 +110,8 @@ class ImageEyeDropper
 			angle = (opts.angle || 60)/360
 			a1 = @color.toHex()
 			a2 = @color.h(h+angle).toHex()
-			a3 = @color.h(h+0.5).toHex()
-			a4 = @color.h(h+0.5+angle).toHex()
+			a3 = @color.h(normalizeAngle(h+0.5)).toHex()
+			a4 = @color.h(normalizeAngle(h+0.5+angle)).toHex()
 			@color.h h
 			return [a1, a2, a3, a4]
 
