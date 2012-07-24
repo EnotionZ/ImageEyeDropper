@@ -64,11 +64,12 @@ class ImageEyeDropper
 		#indexPrimary3 = popMax()
 
 		# get average hue color in column
+		getAvgColor = (s, c)-> s.h += c[0]; s.s += c[1]; s.v += c[2]
 		getAvgHueColor = (index)=>
-			hue = 0
-			hue += hsva[0] for hsva in buckets[index]
-			hue /= buckets[index].length
-			color.hsva {h: hue, s: @avgSat, v: @avgVal}
+			l = buckets[index].length
+			s = {h: 0, s: 0, v: 0}
+			getAvgColor s, hsva for hsva in buckets[index]
+			color.hsva {h: s.h/l, s: s.s/l, v: s.v/l}
 		color1 = getAvgHueColor indexPrimary1
 		#color2 = getAvgHueColor indexPrimary2
 		#color3 = getAvgHueColor indexPrimary3
