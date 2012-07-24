@@ -9,9 +9,9 @@
 		html, body, div { margin: 0; }
 		#sample, #container { border-radius: 1000px; }
 		#sample { cursor: crosshair; margin: 50px; }
-		#container { margin: 100px 0 0 100px; position: relative; float: left; }
+		#container { margin: 20px 0 0 20px; position: relative; float: left; }
 
-		#swatches { clear: both; margin: 20px; }
+		#swatches { float: left; margin: 20px; }
 		#swatches div { margin: 0 0 20px; }
 		#swatches h4 { margin: 0 0 5px; }
 		#swatches ul { list-style-type: none; clear: both; margin: 0; padding: 0; }
@@ -20,13 +20,12 @@
 	</style>
 </head>
 <body>
-	<div id="container">
-		<img src="test/src/sample.jpg" id="sample">
-	</div>
-
 	<div id="swatches">
 	</div>
 
+	<div id="container">
+		<img src="test/src/sample.jpg" id="sample">
+	</div>
 
 	<script type="text/javascript">
 		var swatches = document.getElementById('swatches');
