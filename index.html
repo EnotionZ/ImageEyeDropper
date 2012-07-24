@@ -1,34 +1,73 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Image Eye Dropper</title>
-		<script src="lib/ImageEyeDropper.js"></script>
-		<style type="text/css">
-			html, body, div { margin: 0; }
-			#sample, #container { border-radius: 1000px; }
-			#sample { cursor: crosshair; margin: 50px; }
-			#container { margin: 100px 0 0 100px; position: relative; float: left; }
-		</style>
-  </head>
-  <body>
-	  <div id="container">
-		  <img src="test/src/sample.jpg" id="sample">
-	  </div>
+<head>
+	<title>Image Eye Dropper</title>
+	<script src="lib/colorjs/src/colorutils.js"></script>
+	<script src="lib/colorjs/src/color.js"></script>
+	<script src="lib/ImageEyeDropper.js"></script>
+	<style type="text/css">
+		html, body, div { margin: 0; }
+		#sample, #container { border-radius: 1000px; }
+		#sample { cursor: crosshair; margin: 50px; }
+		#container { margin: 100px 0 0 100px; position: relative; float: left; }
 
-<script type="text/javascript">
-var idrop = new ImageEyeDropper('sample');
-var container = document.getElementById('container');
+		#swatches { clear: both; margin: 20px; }
+		#swatches div { margin: 0 0 20px; }
+		#swatches h4 { margin: 0 0 5px; }
+		#swatches ul { list-style-type: none; clear: both; margin: 0; padding: 0; }
+		#swatches li { margin: 0 10px; display: inline-block; width: 60px; height: 40px; line-height: 40px;  text-align: center; }
 
-idrop.on('click', function(hex, rgb) {
-	rgb.push(.5);
-	document.body.style.backgroundColor = 'rgba('+rgb.join(',')+')';
-});
-idrop.on('mousemove', function(hex, rgb) {
-	container.style.backgroundColor = hex;
-});
+	</style>
+</head>
+<body>
+	<div id="container">
+		<img src="test/src/sample.jpg" id="sample">
+	</div>
 
-</script>
+	<div id="swatches">
+	</div>
 
-  </body>
+
+	<script type="text/javascript">
+		var swatches = document.getElementById('swatches');
+		var _showSwatches = function(arr, title) {
+			var html = '<div>';
+			if(typeof title === 'string') html += '<h4>'+title+'</h4>';
+			html += '<ul>';
+			for(var i=0; i<arr.length; i++) {
+				html += '<li style="background-color: #' +arr[i] + ';">'+arr[i]+'</li>';
+			}
+			html += '</ul></div>';
+			swatches.innerHTML += html;
+		};
+
+		var idrop = new ImageEyeDropper('sample', {
+			ready: function() {
+				var a1 = this.getSwatches('analogous', { angle: 20 });
+				var a2 = this.getSwatches('analogous', { angle: 40 });
+				var sc1 = this.getSwatches('split-complementary', { angle: 30 });
+				var sc2 = this.getSwatches('split-complementary', { angle: 50 });
+				var t1 = this.getSwatches('tetradic', { angle: 60 });
+				var t2 = this.getSwatches('tetradic', { angle: 20 });
+				_showSwatches(a1, 'Analogous at 20 degrees');
+				_showSwatches(a2, 'Analogous at 40 degrees');
+				_showSwatches(sc1, 'Split-complementary at 30 degrees');
+				_showSwatches(sc2, 'Split-complementary at 30 degrees');
+				_showSwatches(t1, 'tetradic at 60 degrees');
+				_showSwatches(t2, 'tetradic at 20 degrees');
+			}
+		});
+		var container = document.getElementById('container');
+
+		idrop.on('click', function(hex, rgb) {
+			rgb.push(.5);
+			document.body.style.backgroundColor = 'rgba('+rgb.join(',')+')';
+		});
+		idrop.on('mousemove', function(hex, rgb) {
+			container.style.backgroundColor = hex;
+		});
+	</script>
+
+</body>
 </html>
 
