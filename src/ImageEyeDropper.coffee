@@ -61,10 +61,10 @@ class ImageEyeDropper
       index
     indexPrimary = popMax()
 
-    # get primary2 and ensure it's at least 90 degrees away
-    quarter = _b/4
+    # get secondary and ensure it's at least 60 degrees away
+    quarter = _b/6; secondary_tries=0
     while (diff=Math.abs((indexSecondary=popMax())-indexPrimary)) < quarter
-      true
+      if ++secondary_tries > _b then break
 
     # get average hue color in column
     getAvgColor = (s, c)-> s.h += c[0]; s.s += c[1]; s.v += c[2]
@@ -72,7 +72,7 @@ class ImageEyeDropper
       l = buckets[index].length
       s = {h: 0, s: 0, v: 0}
       getAvgColor s, hsva for hsva in buckets[index]
-      hsl = {h: s.h/l, s: s.s/l, v: s.v/l}
+      hsl = {h: s.h/l || 0, s: s.s/l || 0, v: s.v/l || 0}
       color.hsva hsl
     color1 = getAvgHueColor indexPrimary
     color2 = getAvgHueColor indexSecondary
