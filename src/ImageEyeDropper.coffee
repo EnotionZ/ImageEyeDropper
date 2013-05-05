@@ -128,15 +128,7 @@ class ImageEyeDropper
   imgMousemove: (e)-> @trigger 'mousemove', @colorFromPoint(@cursor=@_getCursor e), @rgb
 
   _getCursor: (e)->
-    @_offset ?= @_getOffset()
-    x: e.clientX - @_offset.x, y: e.clientY - @_offset.y
-
-  _getOffset: ()->
-    x = y = 0; obj = @img
-    while obj.offsetParent
-      x += obj.offsetLeft; y += obj.offsetTop
-      obj = obj.offsetParent
-    @_offset = x: x, y: y
+    x: e.offsetX, y: e.offsetY
 
   trigger: (type)->
     fns = @fnStack[type]; args = Array.prototype.slice.call arguments,1
